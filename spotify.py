@@ -92,19 +92,9 @@ def spot_listar_playlists(user_id, user_headers=user_headers, user_params=user_p
             print(f"{offset} playlists")
     return lista_playlists
 
-a = spot_listar_playlists('evyllamaria')
-for i in a:
-    print(i)
 
-# url_playlists = f"https://api.spotify.com/v1/users/evyllamaria/playlists"
-# playlists = requests.get(url_playlists, headers=user_headers)
-# response_playlists = playlists.json()
-# nexti = response_playlists['next']
-# print(response_playlists)
-
-
-def listar_musicas_playlist(playlist_id, user_headers=user_headers, user_params=user_params):
-    url = f"https://api.spotify.com/v1/playlists/{playlist_id}"
+def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_params=user_params):
+    url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
     r = requests.get(url, headers=user_headers, params=user_params)
     response = r.json()
     limite = response['total']
@@ -119,20 +109,21 @@ def listar_musicas_playlist(playlist_id, user_headers=user_headers, user_params=
             for item in response["items"]:
                 for artist in item['track']['artists']:
                     nome = artist['name']
-                musica = f"nome: {item['track']['name']} - artista: {nome}"
+                musica = f"{item['track']['name']} - {nome}"
                 lista.append(musica)
             return lista
         else:
             for item in response["items"]:
                 for artist in item['track']['artists']:
                     nome = artist['name']
-                musica = f"nome: {item['track']['name']} - artista: {nome}"
+                musica = f"{item['track']['name']} - {nome}"
                 lista.append(musica)
             r = requests.get(response_tracks['next'], headers=user_headers, params=user_params)
             response_tracks = r.json()
             offset += 50
             print(f"{offset} músicas")
     return lista
+
 
 def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
 
@@ -165,6 +156,3 @@ def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
             offset += 50
             print(f"{offset} músicas")
     return lista_musicas
-
-# print(spot_listar_musicas())
-        

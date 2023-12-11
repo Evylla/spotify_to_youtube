@@ -1,5 +1,5 @@
 import os
-
+import time
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
@@ -43,28 +43,34 @@ def you_pesquisar_musica(musica):
 
     return(musica_pesquisada)
 
+musica = you_pesquisar_musica("Stephen Sanchez - Mountain Peaks")
+print(musica['id']['videoId'])
+
 
 def you_inserir_musicas_na_playlist(musica, playlist_id):
-    request = youtube.playlistItems().insert(
-        part="snippet",
-        body={
-            "snippet": {
-            "playlistId": playlist_id,
-            "resourceId": {
-                "kind": "youtube#video",
-                "videoId": musica
-            }
-            }
-        }
-    )
-    response = request.execute()
+    max_tentativas = 5
+    tentativas = 0
+    while tentativas < max_tentativas:
+        try:
+            request = youtube.playlistItems().insert(
+                part="snippet",
+                body={
+                    "snippet": {
+                    "playlistId": playlist_id,
+                    "resourceId": {
+                        "kind": "youtube#video",
+                        "videoId": musica
+                    }
+                    }
+                }
+            )
+            response = request.execute()
+            return response
+        except HttpError as e:
+            if e.resp.status == 409 and 'SERVICE_UNAVAILABLE' in str(e):
+                tentativas += 1
+                time.sleep(5)
+            else:
+                raise Exception("Failed to add the song to the playlist after multiple retries.")
 
     print(response)
-
-def main():
-    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-    print(you_inserir_musicas_na_playlist("QUwxKWT6m7U"))
-    
-
-if __name__ == "__main__":
-    main()
