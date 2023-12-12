@@ -16,7 +16,9 @@ def main():
         raise SystemExit
     elif escolha == '1':
         nome_usuario = input("Digite seu nome de usuário: ")
-        print(spot_listar_playlists(nome_usuario))
+        response_playlists = spot_listar_playlists(nome_usuario)
+        for i in response_playlists:
+            print(i)
     elif escolha == '2':
         musicas = spot_listar_musicas()
         for i in musicas:
