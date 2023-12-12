@@ -10,10 +10,10 @@ def main():
                     \n2 - Listar músicas do spotify
                     \n3 - Listar músicas de uma playlist do spotify
                     \n4 - Transferir músicas de uma playlist no spotify para uma playlist no youtube
-                    \n'S' - para sair\n\n""")
-    if escolha.upper() == 'S':
+                    \n0 - para sair\n\n""")
+    if escolha.upper() == '0':
         print("Tchau!")
-        SystemExit
+        raise SystemExit
     elif escolha == '1':
         nome_usuario = input("Digite seu nome de usuário: ")
         print(spot_listar_playlists(nome_usuario))
@@ -36,7 +36,17 @@ def main():
                 new_musica = you_pesquisar_musica(i)
                 you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_playlist_destino)
                 print(f"inserindo: {new_musica}")
+        elif res == '2':
+            nome_playlist = input("Vamos criar uma nova. Dê um nome para ela: ")
+            id_nova_playlist = you_criar_playlist(nome_playlist)
+            id_playlist_spotify = input("Digite agora o id da playlist no spotify: ")
+            musicas_spot = spot_listar_musicas_playlist(id_playlist_spotify)
+            for i in musicas_spot:
+                new_musica = you_pesquisar_musica(i)
+                you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_nova_playlist)
+                print(f"inserindo: {new_musica}")
     
 
 if __name__ == "__main__":
-    main()
+    while True:
+        main()

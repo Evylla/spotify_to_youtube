@@ -3,6 +3,7 @@ import time
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
+from googleapiclient.errors import HttpError
 
 scopes = ["https://www.googleapis.com/auth/youtube.readonly", "https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.force-ssl"]
 
@@ -46,6 +47,21 @@ def you_pesquisar_musica(musica):
 musica = you_pesquisar_musica("Stephen Sanchez - Mountain Peaks")
 print(musica['id']['videoId'])
 
+def you_criar_playlist(nome_playlist):
+
+    request = youtube.playlists().insert(
+    part="snippet",
+    body={
+        "snippet": {
+        "title": nome_playlist
+        }
+    }
+    )
+    response = request.execute()
+
+    return response['id']
+
+print(you_criar_playlist('teste2'))
 
 def you_inserir_musicas_na_playlist(musica, playlist_id):
     max_tentativas = 5

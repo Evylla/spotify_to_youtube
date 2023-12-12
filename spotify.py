@@ -19,7 +19,7 @@ def get_code():
         "response_type": "code",
         "redirect_uri": "http://localhost:7777/callback",
         "scope": scope,
-        # "show_dialog": True
+        "show_dialog": True
     }
    
     # r_code = requests.get(link_autorizacao + urlencode(auth_headers))
