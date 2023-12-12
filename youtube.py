@@ -29,9 +29,18 @@ lista = response['items']
 
 
 def you_listar_playlists():
-    for playlist in lista:
-        print(f"nome da playlist: {playlist['snippet']['title']}")
-        print(f"id da playlist: {playlist['id']}")
+    lista_playlists = []
+    request = youtube.playlists().list(
+        part="snippet",
+        mine=True
+    )
+    response = request.execute()
+    for playlist in response['items']:
+        playlist = f"nome da playlist: {playlist['snippet']['title']}\nid da playlist: {playlist['id']}"
+        lista_playlists.append(playlist)
+    return lista_playlists
+
+
 
 def you_pesquisar_musica(musica):
     request = youtube.search().list(
