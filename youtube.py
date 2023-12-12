@@ -61,7 +61,6 @@ def you_criar_playlist(nome_playlist):
 
     return response['id']
 
-print(you_criar_playlist('teste2'))
 
 def you_inserir_musicas_na_playlist(musica, playlist_id):
     max_tentativas = 5

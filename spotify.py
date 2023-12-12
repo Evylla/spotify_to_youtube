@@ -31,9 +31,8 @@ def get_code():
     code = url[index_id + 1:]
     return code
 
-# print(get_code())
+
 code = get_code()
-print(code)
 
 token_headers = {
     'Authorization': f'Basic {auth_header.decode("ascii")}',
@@ -123,7 +122,6 @@ def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_pa
             offset += 50
             print(f"{offset} músicas")
     return lista
-
 
 def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
 
