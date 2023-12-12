@@ -5,8 +5,11 @@
 ## Pré-Requisitos
 
 1 - Você deve ter o python versão 3.11 ou posterior instalado na sua máquina
+
 2 - Você deve configurar uma API na sua conta do spotify ([Link de apoio](https://developer.spotify.com/documentation/web-api))
+
 3 - Você deve configurar também sua API do Youtube no painel do google ([Link de apoio](https://developers.google.com/youtube/v3/getting-started?hl=pt-br))
+
 3.1 Após configurar a API do youtube, faça o download do arquivo .json que contém suas credenciais, renomeie o mesmo para "client_secret.json" e o cole na raiz do projeto.
 
 ## Variáveis de ambiente necessárias
