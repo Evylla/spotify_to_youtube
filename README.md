@@ -16,10 +16,10 @@
 
 ## Variáveis de ambiente necessárias
 
-- No arquivo spotify.py altere as seguintes variáveis para os valores fornecidos pela sua API do spotify:
+- No arquivo settings.py altere as seguintes variáveis para os valores fornecidos pela sua API do spotify:
 ```.env
-client_id = <YOUR_SPOTIFY_CLIENT_ID>
-client_secret = <YOUR_SPOTIFY_SECRET_KEY>
+YOUR_SPOTIFY_CLIENT_ID
+YOUR_SPOTIFY_SECRET_KEY
 ```
 ## Rodando localmente
 
