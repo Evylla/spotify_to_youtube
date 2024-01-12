@@ -69,6 +69,7 @@ def spot_listar_playlists(user_id, user_headers=user_headers, user_params=user_p
     continuar = True
     try:
         playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
+        playlists.raise_for_status()
         response_playlists = playlists.json()
         limite = response_playlists['total']
         while continuar:
@@ -77,6 +78,7 @@ def spot_listar_playlists(user_id, user_headers=user_headers, user_params=user_p
                 continuar = False
                 user_params = {"offset": offset, "limit": (limite - offset)}
                 playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
+
                 for item in response_playlists["items"]:
                     playlist = (f"nome: {item['name']} musicas: {item['tracks']['total']}\n{item['id']}")
                     lista_playlists.append(playlist)
@@ -91,9 +93,11 @@ def spot_listar_playlists(user_id, user_headers=user_headers, user_params=user_p
                 print(f"{offset} playlists")
         return lista_playlists
 
-    except:
-        lista_playlists = False
-        raise Exception(f"Ocorreu um erro: {response_playlists['error']['status']}\n{response_playlists['error']['message']}")
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            lista_playlists = False
+            print(f"Ocorreu um erro: {e.response.reason}")
+            return lista_playlists
 
 
 def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_params=user_params):
@@ -102,6 +106,7 @@ def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_pa
     continuar = True
     url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
     r = requests.get(url, headers=user_headers, params=user_params)
+    r.raise_for_status()
     response = r.json()
     limite = response['total']
     try:
@@ -127,8 +132,13 @@ def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_pa
                 offset += 50
                 print(f"{offset} músicas")
         return lista
-    except:
-        raise Exception(f"Ocorreu um erro: {response['error']['status']}\n{response['error']['message']}")
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            lista = False
+            print(f"Ocorreu um erro: {e.response.reason}")
+            return lista
+        else:
+            print(f"Ocorreu um erro: {e.response.reason}")
 
 
 def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
@@ -137,6 +147,7 @@ def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
     offset = 0
     continuar = True
     tracks = requests.get(url_tracks, headers=user_headers, params=user_params)
+    tracks.raise_for_status()
     response_tracks = tracks.json()
     limite = response_tracks['total']
 
@@ -164,5 +175,10 @@ def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
                 offset += 50
                 print(f"{offset} músicas")
         return lista_musicas
-    except:
-        raise Exception(f"Ocorreu um erro: {response_tracks['error']['status']}\n{response_tracks['error']['message']}")
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            lista_musicas = False
+            print(f"Ocorreu um erro: {e.response.reason}")
+            return lista_musicas
+        else:
+            print(f"Ocorreu um erro: {e.response.reason}")

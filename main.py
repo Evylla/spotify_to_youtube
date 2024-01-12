@@ -19,13 +19,15 @@ def main():
     elif escolha == '1':
         nome_usuario = input("Digite seu nome de usuário: ")
         response_playlists = spot_listar_playlists(nome_usuario)
-        if response_playlists:
-            print(response_playlists)
+        if response_playlists == False:
+            main()
         for i in response_playlists:
             print(i)
 
     elif escolha == '2':
         musicas = spot_listar_musicas()
+        if musicas == False:
+            main()
         for i in musicas:
             print(i)
 
