@@ -64,93 +64,105 @@ user_params = {
 def spot_listar_playlists(user_id, user_headers=user_headers, user_params=user_params):
     
     url_playlists = f"https://api.spotify.com/v1/users/{user_id}/playlists"
-    playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
-    response_playlists = playlists.json()
-    limite = response_playlists['total']
     lista_playlists = []
     offset = 0
     continuar = True
+    try:
+        playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
+        response_playlists = playlists.json()
+        limite = response_playlists['total']
+        while continuar:
 
-    while continuar:
+            if response_playlists['next'] == None:
+                continuar = False
+                user_params = {"offset": offset, "limit": (limite - offset)}
+                playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
+                for item in response_playlists["items"]:
+                    playlist = (f"nome: {item['name']} musicas: {item['tracks']['total']}\n{item['id']}")
+                    lista_playlists.append(playlist)
+                return lista_playlists
+            else:
+                for item in response_playlists["items"]:
+                    playlist = (f"nome: {item['name']} musicas: {item['tracks']['total']}\n{item['id']}")
+                    lista_playlists.append(playlist)
+                playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
+                response_playlists = playlists.json()
+                offset += 50
+                print(f"{offset} playlists")
+        return lista_playlists
 
-        if response_playlists['next'] == None:
-            continuar = False
-            user_params = {"offset": offset, "limit": (limite - offset)}
-            playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
-            for item in response_playlists["items"]:
-                playlist = (f"nome: {item['name']} musicas: {item['tracks']['total']}\n{item['id']}")
-                lista_playlists.append(playlist)
-            return lista_playlists
-        else:
-            for item in response_playlists["items"]:
-                playlist = (f"nome: {item['name']} musicas: {item['tracks']['total']}\n{item['id']}")
-                lista_playlists.append(playlist)
-            playlists = requests.get(url_playlists, headers=user_headers, params=user_params)
-            response_playlists = playlists.json()
-            offset += 50
-            print(f"{offset} playlists")
-    return lista_playlists
+    except:
+        lista_playlists = False
+        raise Exception(f"Ocorreu um erro: {response_playlists['error']['status']}\n{response_playlists['error']['message']}")
 
 
 def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_params=user_params):
+    lista = []
+    offset = 0
+    continuar = True
     url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
     r = requests.get(url, headers=user_headers, params=user_params)
     response = r.json()
     limite = response['total']
-    lista = []
-    offset = 0
-    continuar = True
-    while continuar:
-        if response['next'] == None:
-            continuar = False
-            user_params = {"offset": offset, "limit": (limite - offset)}
-            r = requests.get(url, headers=user_headers, params=user_params)
-            for item in response["items"]:
-                for artist in item['track']['artists']:
-                    nome = artist['name']
-                musica = f"{item['track']['name']} - {nome}"
-                lista.append(musica)
-            return lista
-        else:
-            for item in response["items"]:
-                for artist in item['track']['artists']:
-                    nome = artist['name']
-                musica = f"{item['track']['name']} - {nome}"
-                lista.append(musica)
-            r = requests.get(response_tracks['next'], headers=user_headers, params=user_params)
-            response_tracks = r.json()
-            offset += 50
-            print(f"{offset} músicas")
-    return lista
+    try:
+        while continuar:
+            if response['next'] == None:
+                continuar = False
+                user_params = {"offset": offset, "limit": (limite - offset)}
+                r = requests.get(url, headers=user_headers, params=user_params)
+                for item in response["items"]:
+                    for artist in item['track']['artists']:
+                        nome = artist['name']
+                    musica = f"{item['track']['name']} - {nome}"
+                    lista.append(musica)
+                return lista
+            else:
+                for item in response["items"]:
+                    for artist in item['track']['artists']:
+                        nome = artist['name']
+                    musica = f"{item['track']['name']} - {nome}"
+                    lista.append(musica)
+                r = requests.get(response_tracks['next'], headers=user_headers, params=user_params)
+                response_tracks = r.json()
+                offset += 50
+                print(f"{offset} músicas")
+        return lista
+    except:
+        raise Exception(f"Ocorreu um erro: {response['error']['status']}\n{response['error']['message']}")
+
 
 def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
 
-    tracks = requests.get(url_tracks, headers=user_headers, params=user_params)
-    response_tracks = tracks.json()
-    limite = response_tracks['total']
     lista_musicas = []
     offset = 0
     continuar = True
-    while continuar:
+    tracks = requests.get(url_tracks, headers=user_headers, params=user_params)
+    response_tracks = tracks.json()
+    limite = response_tracks['total']
 
-        if response_tracks['next'] == None:
-            continuar = False
-            user_params = {"offset": offset, "limit": (limite - offset)}
-            r = requests.get(url_tracks, headers=user_headers, params=user_params)
-            for item in response_tracks["items"]:
-                for artist in item['track']['artists']:
-                    nome = artist['name']
-                musica = f"nome: {item['track']['name']} - artista: {nome}"
-                lista_musicas.append(musica)
-            return lista_musicas
-        else:
-            for item in response_tracks["items"]:
-                for artist in item['track']['artists']:
-                    nome = artist['name']
-                musica = f"nome: {item['track']['name']} - artista: {nome}"
-                lista_musicas.append(musica)
-            r = requests.get(response_tracks['next'], headers=user_headers, params=user_params)
-            response_tracks = r.json()
-            offset += 50
-            print(f"{offset} músicas")
-    return lista_musicas
+    try:
+        while continuar:
+
+            if response_tracks['next'] == None:
+                continuar = False
+                user_params = {"offset": offset, "limit": (limite - offset)}
+                r = requests.get(url_tracks, headers=user_headers, params=user_params)
+                for item in response_tracks["items"]:
+                    for artist in item['track']['artists']:
+                        nome = artist['name']
+                    musica = f"nome: {item['track']['name']} - artista: {nome}"
+                    lista_musicas.append(musica)
+                return lista_musicas
+            else:
+                for item in response_tracks["items"]:
+                    for artist in item['track']['artists']:
+                        nome = artist['name']
+                    musica = f"nome: {item['track']['name']} - artista: {nome}"
+                    lista_musicas.append(musica)
+                r = requests.get(response_tracks['next'], headers=user_headers, params=user_params)
+                response_tracks = r.json()
+                offset += 50
+                print(f"{offset} músicas")
+        return lista_musicas
+    except:
+        raise Exception(f"Ocorreu um erro: {response_tracks['error']['status']}\n{response_tracks['error']['message']}")

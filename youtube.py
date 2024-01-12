@@ -41,34 +41,36 @@ def you_listar_playlists():
     return lista_playlists
 
 
-
 def you_pesquisar_musica(musica):
-    request = youtube.search().list(
-    part="snippet",
-    maxResults=20,
-    q=musica
-    )
-    response = request.execute()
-    musica_pesquisada = response["items"][0]
+    try:
+        request = youtube.search().list(
+        part="snippet",
+        maxResults=20,
+        q=musica
+        )
+        response = request.execute()
+        musica_pesquisada = response["items"][0]
 
-    return(musica_pesquisada)
+        return(musica_pesquisada)
+    except HttpError as e:
+        raise Exception(f"Ocorreu um erro: {e.resp.status}")
 
-musica = you_pesquisar_musica("Stephen Sanchez - Mountain Peaks")
-print(musica['id']['videoId'])
 
 def you_criar_playlist(nome_playlist):
-
-    request = youtube.playlists().insert(
-    part="snippet",
-    body={
-        "snippet": {
-        "title": nome_playlist
+    try:
+        request = youtube.playlists().insert(
+        part="snippet",
+        body={
+            "snippet": {
+            "title": nome_playlist
+            }
         }
-    }
-    )
-    response = request.execute()
+        )
+        response = request.execute()
+        return response['id']
+    except HttpError as e:
+        raise Exception(f"Ocorreu um erro: {e.resp.status}")
 
-    return response['id']
 
 
 def you_inserir_musicas_na_playlist(musica, playlist_id):

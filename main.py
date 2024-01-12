@@ -19,6 +19,8 @@ def main():
     elif escolha == '1':
         nome_usuario = input("Digite seu nome de usuário: ")
         response_playlists = spot_listar_playlists(nome_usuario)
+        if response_playlists:
+            print(response_playlists)
         for i in response_playlists:
             print(i)
 
@@ -40,7 +42,8 @@ def main():
     elif escolha == '4':
         res = input("A playlist destino já existe no youtube?\n1 - Sim\n2 - Não\nSe você não souber o ID da playlist pressione '0', volte para o menu inicial e use uma das opções para listar suas playlists e pegar o ID da playlist desejada.\n")
         if res == '0':
-            main()            
+            main()
+
         elif res == '1':
             id_playlist_destino = input("ID da playlist no youtube: ")
             id_playlist_spotify = input("ID da playlist no spotify: ")
@@ -49,6 +52,7 @@ def main():
                 new_musica = you_pesquisar_musica(i)
                 you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_playlist_destino)
                 print(f"inserindo: {new_musica}")
+
         elif res == '2':
             nome_playlist = input("Vamos criar uma nova. Dê um nome para ela: ")
             id_nova_playlist = you_criar_playlist(nome_playlist)
