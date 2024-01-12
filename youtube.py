@@ -29,16 +29,19 @@ lista = response['items']
 
 
 def you_listar_playlists():
-    lista_playlists = []
-    request = youtube.playlists().list(
-        part="snippet",
-        mine=True
-    )
-    response = request.execute()
-    for playlist in response['items']:
-        playlist = f"nome da playlist: {playlist['snippet']['title']}\nid da playlist: {playlist['id']}"
-        lista_playlists.append(playlist)
-    return lista_playlists
+    try:
+        lista_playlists = []
+        request = youtube.playlists().list(
+            part="snippet",
+            mine=True
+        )
+        response = request.execute()
+        for playlist in response['items']:
+            playlist = f"nome da playlist: {playlist['snippet']['title']}\nid da playlist: {playlist['id']}"
+            lista_playlists.append(playlist)
+    except HttpError as e:
+        raise Exception(f"Ocorreu um erro: {e.resp.status}")
+    return False
 
 
 def you_pesquisar_musica(musica):
@@ -50,10 +53,10 @@ def you_pesquisar_musica(musica):
         )
         response = request.execute()
         musica_pesquisada = response["items"][0]
-
         return(musica_pesquisada)
     except HttpError as e:
-        raise Exception(f"Ocorreu um erro: {e.resp.status}")
+        print(f"Ocorreu um erro: {e.resp.status}")
+        return False
 
 
 def you_criar_playlist(nome_playlist):
@@ -69,7 +72,8 @@ def you_criar_playlist(nome_playlist):
         response = request.execute()
         return response['id']
     except HttpError as e:
-        raise Exception(f"Ocorreu um erro: {e.resp.status}")
+        print(f"Ocorreu um erro: {e.resp.status}")
+        return False
 
 
 
@@ -98,5 +102,4 @@ def you_inserir_musicas_na_playlist(musica, playlist_id):
                 time.sleep(5)
             else:
                 raise Exception("Failed to add the song to the playlist after multiple retries.")
-
-    print(response)
+    return False

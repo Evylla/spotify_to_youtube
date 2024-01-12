@@ -67,6 +67,8 @@ def main():
                 
     elif escolha == '5':
         lista_playlists = you_listar_playlists()
+        if lista_playlists == False:
+            main()
         for i in lista_playlists:
             print(i)
     

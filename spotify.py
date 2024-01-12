@@ -95,9 +95,8 @@ def spot_listar_playlists(user_id, user_headers=user_headers, user_params=user_p
 
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 404:
-            lista_playlists = False
             print(f"Ocorreu um erro: {e.response.reason}")
-            return lista_playlists
+    return False
 
 
 def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_params=user_params):
@@ -134,11 +133,10 @@ def spot_listar_musicas_playlist(playlist_id, user_headers=user_headers, user_pa
         return lista
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 404:
-            lista = False
             print(f"Ocorreu um erro: {e.response.reason}")
-            return lista
         else:
             print(f"Ocorreu um erro: {e.response.reason}")
+    return False
 
 
 def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
@@ -177,8 +175,7 @@ def spot_listar_musicas(user_headers=user_headers, user_params=user_params):
         return lista_musicas
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 404:
-            lista_musicas = False
             print(f"Ocorreu um erro: {e.response.reason}")
-            return lista_musicas
         else:
             print(f"Ocorreu um erro: {e.response.reason}")
+    return False
