@@ -19,15 +19,11 @@ def main():
     elif escolha == '1':
         nome_usuario = input("Digite seu nome de usuário: ")
         response_playlists = spot_listar_playlists(nome_usuario)
-        if response_playlists == False:
-            main()
         for i in response_playlists:
             print(i)
 
     elif escolha == '2':
         musicas = spot_listar_musicas()
-        if musicas == False:
-            main()
         for i in musicas:
             print(i)
 
@@ -52,23 +48,29 @@ def main():
             musicas_spot = spot_listar_musicas_playlist(id_playlist_spotify)
             for i in musicas_spot:
                 new_musica = you_pesquisar_musica(i)
+                if you_checar_musica_na_playlist(new_musica['id']['videoId'], id_playlist_destino) == False:
+                    print("não inserida")
+                    continue
                 you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_playlist_destino)
-                print(f"inserindo: {new_musica}")
+                print("inserida")
+                    
 
         elif res == '2':
             nome_playlist = input("Vamos criar uma nova. Dê um nome para ela: ")
             id_nova_playlist = you_criar_playlist(nome_playlist)
-            id_playlist_spotify = input("Digite agora o id da playlist no spotify: ")
-            musicas_spot = spot_listar_musicas_playlist(id_playlist_spotify)
+            print(f'id: {id_nova_playlist}')
+            # id_playlist_spotify = input("Digite agora o id da playlist no spotify: ")
+            musicas_spot = spot_listar_musicas_playlist(id_nova_playlist)
             for i in musicas_spot:
                 new_musica = you_pesquisar_musica(i)
-                you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_nova_playlist)
-                print(f"inserindo: {new_musica}")
+                if you_checar_musica_na_playlist(new_musica['id']['videoId'], id_playlist_destino) == False:
+                    print("não inserida")
+                    continue
+                you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_playlist_destino)
+                print("inserida")
                 
     elif escolha == '5':
         lista_playlists = you_listar_playlists()
-        if lista_playlists == False:
-            main()
         for i in lista_playlists:
             print(i)
     
