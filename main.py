@@ -58,16 +58,14 @@ def main():
         elif res == '2':
             nome_playlist = input("Vamos criar uma nova. Dê um nome para ela: ")
             id_nova_playlist = you_criar_playlist(nome_playlist)
-            print(f'id: {id_nova_playlist}')
-            # id_playlist_spotify = input("Digite agora o id da playlist no spotify: ")
-            musicas_spot = spot_listar_musicas_playlist(id_nova_playlist)
+            id_playlist_spotify = input("ID da playlist no spotify: ")
+            # print(f'id: {id_nova_playlist}')
+            musicas_spot = spot_listar_musicas_playlist(id_playlist_spotify)
             for i in musicas_spot:
                 new_musica = you_pesquisar_musica(i)
                 if you_checar_musica_na_playlist(new_musica['id']['videoId'], id_playlist_destino) == False:
-                    print("não inserida")
                     continue
                 you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_playlist_destino)
-                print("inserida")
                 
     elif escolha == '5':
         lista_playlists = you_listar_playlists()

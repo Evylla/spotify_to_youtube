@@ -136,4 +136,4 @@ def you_inserir_musicas_na_playlist(musica, playlist_id):
                 tentativas += 1
                 time.sleep(5)
             else:
-                raise Exception("Falha ao tentar adicionar a músic múltiplas vezes.")
+                raise Exception("Falha ao tentar adicionar a música múltiplas vezes.")
