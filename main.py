@@ -63,11 +63,9 @@ def main():
             musicas_spot = spot_listar_musicas_playlist(id_playlist_spotify)
             for i in musicas_spot:
                 new_musica = you_pesquisar_musica(i)
-                if you_checar_musica_na_playlist(new_musica['id']['videoId'], id_nova_playlist) == False:
-                    print("não inserida")
+                if you_checar_musica_na_playlist(new_musica['id']['videoId'], id_playlist_destino) == False:
                     continue
-                you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_nova_playlist)
-                print("inserida")
+                you_inserir_musicas_na_playlist(new_musica['id']['videoId'], id_playlist_destino)
                 
     elif escolha == '5':
         lista_playlists = you_listar_playlists()
