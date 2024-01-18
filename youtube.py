@@ -27,6 +27,40 @@ request = youtube.playlists().list(
 response = request.execute()
 lista = response['items']
 
+def listar_musicas_playlist(id_playlist, nextPageToken=''):
+
+    try:
+
+        request = youtube.playlistItems().list(
+        part= "snippet",
+        playlistId= id_playlist,
+        pageToken= nextPageToken,
+        maxResults = 50
+        )
+        response = request.execute()
+        
+        return response
+
+    except HttpError as e:
+        raise Exception(f"Ocorreu um erro: {e.resp.status}")
+    
+ 
+def you_listar_musicas_playlist(id_playlist):
+    lista_musicas = {}
+    res = listar_musicas_playlist(id_playlist)
+    for i in res['items']:
+        lista_musicas[i['snippet']['resourceId']['videoId']] = i['id']
+
+    while True:
+        if 'nextPageToken' in res:
+            res = listar_musicas_playlist(id_playlist, nextPageToken=res['nextPageToken'])
+            for i in res['items']:
+                lista_musicas[i['snippet']['resourceId']['videoId']] = i['id']
+        else:
+            break
+    
+    return lista_musicas
+
 
 def you_checar_musica_na_playlist(musica, playlist_id):
     lista_id = []
@@ -59,7 +93,6 @@ def you_remover_musica_da_playlist(id_playlist_item):
     except HttpError as e:
         raise Exception(f"Ocorreu um erro: {e.resp.status}")
     
-
 
 def you_listar_playlists():
     try:
@@ -137,41 +170,28 @@ def you_inserir_musicas_na_playlist(musica, playlist_id):
             
 
 def you_atualizar_playlist(playlist_destino_id, lista_musicas_atuais):
-    lista_ids_retirados = []
-    lista_ids_youtube = {}
-    lista_ids_spotify = []
+    lista_ids_youtube = you_listar_musicas_playlist(playlist_destino_id)
+    lista_ids_musica_spotify = []
     
     try:
-
-        request = youtube.playlistItems().list(
-        part= "snippet",
-        playlistId= playlist_destino_id,
-        # pageToken= response['nextPageToken'],
-        maxResults = 50
-        )
-        response = request.execute()
-
-        lista_response = response['items']
-        
-        for i in lista_response:
-            lista_ids_youtube[i['snippet']['resourceId']['videoId']] = i['id']
 
         ## AQUI NESSE CASO É PARA ADICIONAR AS MÚSICAS NOVAS
         for musica in lista_musicas_atuais:
             musica_id = you_pesquisar_musica(musica)
-            lista_ids_spotify.append(musica_id)
-        for i in lista_ids_spotify:
-            if you_checar_musica_na_playlist(musica_id['id']['videoId'], playlist_destino_id) == False:
+            lista_ids_musica_spotify.append(musica_id['id']['videoId'])
+        for i in lista_ids_musica_spotify:
+            if you_checar_musica_na_playlist(i, playlist_destino_id) == False:
                 continue
             print("musica nova adicionada")
-            you_inserir_musicas_na_playlist(musica_id['id']['videoId'])
+            you_inserir_musicas_na_playlist(i, playlist_destino_id)
 
         ## NESSE CASO É PARA REMOVER MUSICAS ANTIGAS
-        for musica in lista_ids_youtube:
-            ## SEGUE LÓGICA PARA RETIRAR
-            continue
+        for musica, id_na_playlist in lista_ids_youtube.items():
+            if musica in lista_ids_musica_spotify:
+                continue
+            you_remover_musica_da_playlist(id_na_playlist)
+            print(f"musica removida: {musica, id_na_playlist}")
         
-        return lista_ids_retirados
 
     except HttpError as e:
         raise Exception(f"Ocorreu um erro: {e.resp.status}")
