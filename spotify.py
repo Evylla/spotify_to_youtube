@@ -1,11 +1,14 @@
 import requests
+import os
 import base64
 from urllib.parse import urlencode
 import webbrowser
-from settings import *
+from dotenv import load_dotenv
 
-client_id = SPOTIFY_CLIENT_ID
-client_secret = SPOTIFY_SECRET_KEY
+load_dotenv()
+
+client_id = os.getenv('SPOTIFY_CLIENT_ID')
+client_secret = os.getenv('SPOTIFY_SECRET_KEY')
 auth_header = base64.urlsafe_b64encode(f'{client_id}:{client_secret}'.encode('ascii'))
 scope = 'playlist-read-collaborative user-library-read playlist-read-private'
 

@@ -1,4 +1,3 @@
 client_secret.json
 teste.py
-spotify_to_youtube/
-settings.py
+.env
