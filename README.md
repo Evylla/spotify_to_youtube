@@ -1,7 +1,7 @@
 # Spotify para Youtube
 > Ainda em desenvolvimento.
 > Um script feito para transferir as músicas do spotify para o youtube. Originalmente seriam apenas as músicas curtidas, mas será possível transferir playlists específicas também e criar playlists novas.
-> > Link para ver [em funcionamento](https://clipchamp.com/watch/Un6MNQNL160)
+> > Link para ver [em funcionamento](https://0mvvt.sharepoint.com/:v:/s/Projetos/EVXnMbJ-325NgypwTrpz7m8BmxG1nvU8T_q_mlWaKRtU4w?e=8l02Sf)
 ![imagem](cmd.png)
 
 ## Pré-Requisitos
